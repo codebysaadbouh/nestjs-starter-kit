@@ -1,0 +1,63 @@
+services:
+
+  maildev:
+    image: maildev/maildev:latest
+    container_name: maildev_nsk
+    ports:
+      - "1080:1080"                                           # Web interface port
+      - "1025:1025"                                           # SMTP server port
+    environment:
+      MAILDEV_INCOMING_USER: "user_smtp"                      # Optional : SMTP username
+      MAILDEV_INCOMING_PASS: "gpLHSQP6bypu"                   # Optional : SMTP password
+      # MAILDEV_OUTGOING_HOST: “smtp.your_server.com”         # Optional: SMTP host for the relay
+      # MAILDEV_OUTGOING_PORT: 587                            # Optional: SMTP port for the relay
+      # MAILDEV_OUTGOING_USER: “user_smtp”                    # Optional: SMTP relay username
+      # MAILDEV_OUTGOING_PASS: “mot_de_passe_smtp”            # Optional: Password for SMTP relay
+      # MAILDEV_AUTO_RELAY: “true”                            # Optional: Enable automatic relaying
+      # MAILDEV_AUTO_RELAY_RULES: “.*@your_domain.com”        # Optional: Automatic relay rules
+    volumes:
+      - maildev_data:/data
+
+  postgres:
+    image: postgres:${POSTGRES_VERSION:-15}-alpine
+    container_name: postgres_nsk
+    ports:
+      - "5432:5432"
+    environment:
+      TZ: Europe/Paris
+      POSTGRES_DB: ${POSTGRES_DB:-nsk-db}
+      # You should definitely change the password in production
+      POSTGRES_USER: ${POSTGRES_USER:-user_nsk}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+    volumes:
+      - database_data:/var/lib/postgresql/data:rw
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_nsk
+    restart: always
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: username@nsk.com
+      PGADMIN_DEFAULT_PASSWORD: strong-password
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+  MinIO:
+    image: minio/minio
+    container_name: minio_nsk
+    environment:
+      MINIO_ROOT_USER: user_nsk
+      MINIO_ROOT_PASSWORD: password
+    volumes:
+      - ./data/minio:/data
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+volumes:
+  maildev_data:
+  database_data:
+  pgadmin-data:
