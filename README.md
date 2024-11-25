@@ -1,6 +1,6 @@
 
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="nsk.svg" width="120" alt="Nest Logo" /></a>
+  <a href="http://nestjs.com/" target="blank"><img src="nsk.svg" width="200" alt="Nest Logo" /></a>
 </p>
 
 Bienvenue dans le **NestJS Starter Kit (NSK)**, une solution clé en main pour démarrer rapidement vos projets en suivant les meilleures pratiques de développement moderne. Ce starter kit inclut des intégrations essentielles pour construire des applications performantes, sécurisées et évolutives.
